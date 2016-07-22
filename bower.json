@@ -10,6 +10,12 @@
     "angular-route": "~1.5.0",
     "angular-loader": "~1.5.0",
     "angular-mocks": "~1.5.0",
-    "html5-boilerplate": "^5.3.0"
+    "html5-boilerplate": "^5.3.0",
+    "angular-ui-router": "^0.3.1",
+    "jquery": "^3.1.0",
+    "bootstrap": "^3.3.6",
+    "angular-cookies": "^1.5.7",
+    "angular-bootstrap": "^2.0.0",
+    "jquery-confirm2": "craftpip/jquery-confirm#^2.5.1"
   }
 }

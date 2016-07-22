@@ -1,0 +1,3 @@
+htAdmin.controller('HomeController',function(){
+	
+});
