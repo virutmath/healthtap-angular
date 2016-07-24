@@ -1,11 +1,16 @@
 htAdmin.config(function ($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise("/");
 
-	$stateProvider.state('home', {
+	$stateProvider.state('dashboard', {
 		url: '/',
-		templateUrl: 'components/home/homeView.html',
-		controller: 'HomeController',
-		controllerAs: 'hc'
+		templateUrl: 'components/dashboard/dashboardView.html',
+		controller: 'DashboardController',
+		controllerAs: 'dc',
+		resolve: {
+			isLogin: (accountService) => {
+				return accountService.checkLogin();
+			}
+		}
 	}).state('login', {
 		url: '/login',
 		templateUrl: 'components/login/loginView.html',

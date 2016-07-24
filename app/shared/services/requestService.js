@@ -1,7 +1,7 @@
 htAdmin.service('requestService', function ($http, $cookies, tokenControlService) {
 
 	this.apiGetToken = (username, password, callback) => {
-		if(!callback) throw new Error("This function require callback");
+		if (!callback) throw new Error("This function require callback");
 		$http({
 			method: 'POST',
 			url: API.URL.token(),
@@ -13,9 +13,7 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 				client_secret: CLIENT_SECRET
 			}
 		}).then((response)=> {
-			//save token to cookie
-			tokenControlService.setToken(response.data.data);
-			callback(null);
+			callback(null,response.data.data);
 			return true;
 		}, (error)=> {
 			callback(error);
@@ -33,22 +31,36 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 				refresh_token: tokenControlService.getTokenRefresh()
 			}
 		}).then((response)=> {
-			if (successCb) successCb(null,response);
+			if (successCb) successCb(null, response);
 		}, (response)=> {
 			if (failureCb) failureCb(response);
 		})
 	};
 
-	this.apiRequest = (method = 'get', url, params, token, successCb, failureCb) => {
+	this.apiRequest = (method = 'get', url, params, successCb, failureCb) => {
 		$http({
 			method: method,
 			url: url,
 			params: params,
 			headers: {'Authorization': tokenControlService.getAuthorizationToken()}
 		}).then((response)=> {
-			if (successCb) successCb(null,response);
+			console.log(response);
+			if (successCb) successCb(null, response);
 		}, (response)=> {
+			console.log(response);
 			if (failureCb) failureCb(response);
+		})
+	};
+
+	this.getUserInfo = (successCb, failureCb)=> {
+		// this.apiRequest('get',API.URL.user_info(),null,successCb,failureCb);
+		$.ajax({
+			type : 'get',
+			url : 'http://localhost:8001/api.php?header=' + tokenControlService.getAuthorizationToken(),
+			dataType: 'json',
+			success: function(resp) {
+				successCb(null,resp);
+			}
 		})
 	}
 });
