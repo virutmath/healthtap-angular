@@ -5,7 +5,7 @@ const API_USER_LIST = '/users';
 const API_USER_REGISTER = '/users';
 const CLIENT_ID = 'health';
 const CLIENT_SECRET = '3erfsd5ghgfssfg';
-
+const AVATAR_DEFAULT = '/assets/img/avatar.png';
 const API = {
 	URL: {
 		token: () => {

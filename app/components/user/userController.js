@@ -1,4 +1,4 @@
-htAdmin.controller('UserController', function ($state, $stateParams, requestService, alertService, isLogin) {
+htAdmin.controller('UserController', function ($state, $stateParams, requestService, profileService, alertService, isLogin) {
 	//check login, check permission
 	if (!isLogin) {
 		$state.go('login');
@@ -6,7 +6,6 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	}
 
 	let self = this;
-	self.tableHeader = ['ID', 'Email'];
 	self.listUser = [];
 	self.errors = [];
 
@@ -20,10 +19,19 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	this.init = () => {
 		//get list user
 		_getListUser(null, function (err, result) {
-			let table = new TableAdmin(result.data);
-			table.column('id');
-			table.column('email');
-			self.listUser = table.renderTableData();
+			// let table = new TableAdmin(result.data);
+			// table.column('id','ID');
+			// table.column('email','Email');
+			// table.column('created_at','Ngày tạo');
+			// table.column('updated_at','Ngày cập nhật');
+			// table.column('activated','Kích hoạt');
+			// self.listUser = table.renderTableData();
+			self.listUser = result.data;
+			self.listUser.map((user)=>{
+				user.avatar = profileService.getAvatarUrl(user.avatar_url);
+				return user;
+			});
+			console.log(result.data);
 		})
 	};
 
@@ -39,7 +47,9 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 			role_code:[this.newUser.role_code]
 		};
 		requestService.apiRequest('post',API.URL.user_register(),params,function(err,response){
-			console.log(response);
+			// console.log(response);
+			//thành công => update table
+
 		},function(err) {
 			console.log(err);
 			for(var field in err.data.errors) {
@@ -48,7 +58,7 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 					self.errors.push(item);
 				})
 			}
-			console.log(self.errors);
+			// console.log(self.errors);
 		});
 	};
 

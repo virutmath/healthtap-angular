@@ -8,8 +8,13 @@ class TableAdmin {
 	constructor(list = []) {
 		this.list = list;
 		this.arrayField = [];
+		this.arrayLabel = [];
+		this.arrayType = [];
 	}
-	column(field) {
+	column(field,label,type = '') {
+		this.arrayLabel.push(label);
+		type = type ? type : 'text';
+		this.arrayType.push(type);
 		this.arrayField.push(field);
 	}
 	renderTableData(){
