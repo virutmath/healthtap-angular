@@ -65,6 +65,37 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 		})
 	};
 
+	this.formDataRequest = (url, params, successCb, failureCb) => {
+		var self = this;
+		$http({
+			method: 'post',
+			url: url,
+			data: params,
+			headers: {
+				'Authorization': tokenControlService.getAuthorizationToken(),
+				'Content-Type': 'application/x-www-form-urlencoded'
+			}
+		}).then((response)=> {
+			// console.log(response);
+			if (successCb) successCb(null, response);
+		}, (response)=> {
+			//xu ly request bi het han token
+			if(response.data.errors.code == ERROR_NAME.TOKEN_EXPIRED) {
+				//refresh token
+				self.refreshToken((err, tokenRefreshed) =>{
+					//save token
+					tokenControlService.setToken(tokenRefreshed.data.data);
+					//request again
+					self.apiRequest(method,url,params,successCb,failureCb);
+					return false;
+				},(err) =>{
+
+				})
+			}
+			if (failureCb) failureCb(response);
+		})
+	};
+
 	this.getUserInfo = (successCb, failureCb)=> {
 		this.apiRequest('get',API.URL.user_info(),null,function(err,resp) {
 			if(successCb && resp.data.data) {
