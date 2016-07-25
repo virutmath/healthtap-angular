@@ -2,6 +2,12 @@ htAdmin.service('tokenControlService', function ($cookies) {
 	let tokenData = $cookies.get('token') ? JSON.parse($cookies.get('token')) : null;
 	let time = Date.now();
 
+	this.reGetToken = () => {
+		//get token again
+		tokenData = $cookies.get('token') ? JSON.parse($cookies.get('token')) : null;
+		time = Date.now();
+	};
+
 	/**
 	 * Set token to cookie
 	 * @param token_data
@@ -21,6 +27,7 @@ htAdmin.service('tokenControlService', function ($cookies) {
 	 * @returns {*}
 	 */
 	this.getTokenValue = () => {
+		this.reGetToken();
 		if (tokenData) return tokenData.token;
 		return null;
 	};
@@ -30,6 +37,7 @@ htAdmin.service('tokenControlService', function ($cookies) {
 	 * @returns {*}
 	 */
 	this.getTokenExpiredTime = () => {
+		this.reGetToken();
 		if (tokenData) return tokenData.expired_time;
 		return null;
 	};
@@ -39,6 +47,7 @@ htAdmin.service('tokenControlService', function ($cookies) {
 	 * @returns {*}
 	 */
 	this.getTokenRefresh = () => {
+		this.reGetToken();
 		if (tokenData) return tokenData.refresh_token;
 		return null;
 	};
@@ -48,6 +57,7 @@ htAdmin.service('tokenControlService', function ($cookies) {
 	 * @returns {*}
 	 */
 	this.getAuthorizationToken = () => {
+		this.reGetToken();
 		if(tokenData) return tokenData.type + ' ' + tokenData.token;
 		return null;
 	}

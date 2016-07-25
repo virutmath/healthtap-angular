@@ -1,0 +1,12 @@
+<table class="table table-bordered table-striped table-hover">
+	<tr class="bg-aqua-active">
+		<th ng-repeat="header in com.header">
+			{{header}}
+		</th>
+	</tr>
+	<tr ng-repeat="row in com.rows">
+		<td ng-repeat="column in row">
+			{{column}}
+		</td>
+	</tr>
+</table>

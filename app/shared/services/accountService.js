@@ -20,5 +20,13 @@ htAdmin.service('accountService', function ($cookies) {
 
 	this.getEmail = () => {
 		return userData ? userData.email : null;
+	};
+	
+	this.getName = () => {
+		return userData ? userData.full_name : null;
+	};
+	
+	this.getInfo = ()=> {
+		return userData;
 	}
 });

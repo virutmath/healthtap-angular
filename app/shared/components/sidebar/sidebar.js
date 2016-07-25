@@ -1,10 +1,11 @@
-function SidebarComponent() {
-	
-}
 htAdmin.component('sidebar',{
 	templateUrl: 'shared/components/sidebar/sidebar.html',
-	controller: 'SidebarComponent',
+	controller: function() {
+		this.email = this.user.email;
+	},
+	controllerAs: 'com',
 	bindings: {
-		listMenu : '='
+		user : '=',
+		menu: '='
 	}
 });

@@ -41,7 +41,6 @@ htAdmin.controller('LoginController', function ($state, requestService, tokenCon
 				$state.go('dashboard');
 			}
 		});
-
 	}
 
 });

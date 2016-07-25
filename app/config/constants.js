@@ -1,6 +1,8 @@
 const BASE_API_URL = 'http://healthcall.gosutv.net';
 const API_OAUTH = '/oauth/access_token';
 const API_USER_INFO = '/users/info';
+const API_USER_LIST = '/users';
+const API_USER_REGISTER = '/users';
 const CLIENT_ID = 'health';
 const CLIENT_SECRET = '3erfsd5ghgfssfg';
 
@@ -11,10 +13,37 @@ const API = {
 		},
 		user_info: () => {
 			return BASE_API_URL + API_USER_INFO
+		},
+		user_list: () => {
+			return BASE_API_URL + API_USER_LIST
+		},
+		user_register: ()=> {
+			return BASE_API_URL + API_USER_REGISTER
 		}
 	}
 };
 
 const ERROR_NAME = {
-	TOKEN_EXPIRED : 'TOKEN_EXPIRED'
+	TOKEN_EXPIRED : 'AccessDenied'
 };
+
+const SIDEBAR_MENU = [
+	{
+		'name': 'User management',
+		'child' : [
+			{
+				'name' : 'List user',
+				'route' : 'dashboard.user'
+			}
+		]
+	},
+	{
+		'name' : 'Category management',
+		'child': [
+			{
+				'name': 'List category',
+				'route': 'dashboard.category'
+			}
+		]
+	}
+];

@@ -11,6 +11,16 @@ htAdmin.config(function ($stateProvider, $urlRouterProvider) {
 				return accountService.checkLogin();
 			}
 		}
+	}).state('dashboard.user',{
+		url :'user',
+		templateUrl: 'components/user/userListView.html',
+		controller: 'UserController',
+		controllerAs: 'uc',
+		resolve: {
+			isLogin: (accountService) => {
+				return accountService.checkLogin();
+			}
+		}
 	}).state('login', {
 		url: '/login',
 		templateUrl: 'components/login/loginView.html',
