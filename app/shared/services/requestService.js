@@ -1,4 +1,4 @@
-htAdmin.service('requestService', function ($http, $cookies, tokenControlService) {
+htAdmin.service('requestService', function ($http, $cookies, tokenControlService, alertService ) {
 
 	this.apiGetToken = (username, password, callback) => {
 		if (!callback) throw new Error("This function require callback");
@@ -49,7 +49,7 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 			if (successCb) successCb(null, response);
 		}, (response)=> {
 			//xu ly request bi het han token
-			if(response.data.errors.code == ERROR_NAME.TOKEN_EXPIRED) {
+			if(response.data && response.data.errors && response.data.errors.code == ERROR_NAME.TOKEN_EXPIRED) {
 				//refresh token
 				self.refreshToken((err, tokenRefreshed) =>{
 					//save token
@@ -58,19 +58,23 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 					self.apiRequest(method,url,params,successCb,failureCb);
 					return false;
 				},(err) =>{
-
+					console.log(err);
 				})
+			}else{
+				if(!failureCb) {
+					alertService.alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+				}
 			}
 			if (failureCb) failureCb(response);
 		})
 	};
 
-	this.formDataRequest = (url, params, successCb, failureCb) => {
+	this.formDataRequest = (method,url, params, successCb, failureCb) => {
 		var self = this;
 		$http({
-			method: 'post',
+			method: method,
 			url: url,
-			data: params,
+			data: $.param(params),
 			headers: {
 				'Authorization': tokenControlService.getAuthorizationToken(),
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -91,6 +95,10 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 				},(err) =>{
 
 				})
+			}else{
+				if(!failureCb) {
+					alertService.alert('Đã có lỗi xảy ra, vui lòng thử lại sau');
+				}
 			}
 			if (failureCb) failureCb(response);
 		})

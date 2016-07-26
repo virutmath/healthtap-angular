@@ -1,4 +1,5 @@
-htAdmin.controller('UserController', function ($state, $stateParams, requestService, profileService, alertService, isLogin) {
+htAdmin.controller('UserController', function ($state, $stateParams, requestService, accountService,
+                                               profileService, alertService, languageService, isLogin) {
 	//check login, check permission
 	if (!isLogin) {
 		$state.go('login');
@@ -8,6 +9,10 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	let self = this;
 	self.listUser = [];
 	self.errors = [];
+
+
+	self.translations = {};
+
 
 	//new user object
 	self.newUser = {
@@ -25,23 +30,25 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	};
 
 
-
 	this.init = () => {
+		//get translate content
+		languageService.getTranslateStatic([
+			'ALERT.PERMISSION.NOT_PERMISSION_DELETE'
+			, 'ALERT.PERMISSION.NOT_PERMISSION_EDIT'
+			, 'ALERT.PERMISSION.NOT_PERMISSION_ADD'
+		], (result)=> {
+			self.translations.not_allow_delete = result['ALERT.PERMISSION.NOT_PERMISSION_DELETE'];
+			self.translations.not_allow_edit = result['ALERT.PERMISSION.NOT_PERMISSION_EDIT'];
+			self.translations.not_allow_add = result['ALERT.PERMISSION.NOT_PERMISSION_ADD'];
+		});
 		//get list user
 		_getListUser(null, function (err, result) {
-			// let table = new TableAdmin(result.data);
-			// table.column('id','ID');
-			// table.column('email','Email');
-			// table.column('created_at','Ngày tạo');
-			// table.column('updated_at','Ngày cập nhật');
-			// table.column('activated','Kích hoạt');
-			// self.listUser = table.renderTableData();
 			self.listUser = result.data;
 			self.listUser.map((user)=> {
 				user.avatar = profileService.getAvatarUrl(user.avatar_url);
 				return user;
 			});
-			console.log(result.data);
+			// console.log(result.data);
 		})
 	};
 
@@ -50,6 +57,11 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	};
 
 	this.showEditModal = (user) => {
+		//check permission
+		if (!accountService.checkPermission('edit')) {
+			alertService.alert(self.translations.not_allow_add);
+			return false;
+		}
 		$('#editUserModal').modal();
 		requestService.apiRequest('get', API.URL.user_detail(user.id), null, function (err, response) {
 			let userData = response.data.data;
@@ -60,26 +72,51 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	};
 
 	this.saveEditUser = () => {
+		//check permission
+		if (!accountService.checkPermission('edit')) {
+			alertService.alert(self.translations.not_allow_add);
+			return false;
+		}
 		//save change
-		if(!self.editUser) {
+		if (!self.editUser) {
 			return false;
 		}
 		let params = {};
-		if(self.editUser.full_name) {
+		if (self.editUser.full_name) {
 			params.full_name = self.editUser.full_name;
 		}
-		if(self.editUser.password) {
+		if (self.editUser.password) {
 			params.password = self.editUser.password;
 		}
-		if(self.editUser.avatar_url) {
+		if (self.editUser.avatar_url) {
 			params.avatar_url = self.editUser.avatar_url;
 		}
-		requestService.formDataRequest(API.URL.user_detail(self.editUser.id),params,(err,response)=>{
+		requestService.formDataRequest('post',API.URL.user_detail(self.editUser.id), params, (err, response)=> {
 			console.log(response);
 		})
 	};
 
+	this.deleteUser = (user) => {
+		//check permission
+		if (!accountService.checkPermission('delete')) {
+			alertService.alert(self.translations.not_allow_delete);
+			return false;
+		}
+		alertService.confirm('Bạn có muốn xóa người dùng này?',()=>{
+			//remove bản ghi khỏi listUser
+			removeElement(self.listUser,user);
+			requestService.apiRequest('delete',API.URL.user_detail(user.id),null,function(err,response){
+				alertService.alert('Thành công');
+			})
+		})
+	};
+
 	this.addUser = () => {
+		//check permission
+		if (!accountService.checkPermission('add')) {
+			alertService.alert(self.translations.not_allow_add);
+			return false;
+		}
 		self.errors = [];
 		let params = {
 			email: this.newUser.email,
@@ -89,9 +126,10 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 		requestService.apiRequest('post', API.URL.user_register(), params, function (err, response) {
 			// console.log(response);
 			//thành công => update table
-
+			self.listUser.push(response.data.data);
+			resetObject(self.newUser);
 		}, function (err) {
-			console.log(err);
+			// console.log(err);
 			for (var field in err.data.errors) {
 				var fErrs = err.data.errors[field];
 				fErrs.forEach((item)=> {

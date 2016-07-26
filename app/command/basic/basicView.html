@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="components/user/styles.min.css">
+<div class="box">
+	<div class="box-header with-border">
+		<h3 class="box-title">
+			Thêm mới chuyên môn
+		</h3>
+	</div>
+	<div class="box-body">
+		<div ng-repeat="errMsg in sc.errors">
+			<div class="alert alert-warning alert-dismissible fade in" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+					aria-hidden="true">×</span></button>
+				{{errMsg}}
+			</div>
+		</div>
+		<form>
+			<div class="form-group">
+				<label>Tên chuyên môn</label>
+				<input type="text" ng-model="sc.newRecord.name" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label>Mô tả</label>
+				<textarea class="form-control" ng-model="sc.newRecord.description"></textarea>
+			</div>
+			<div class="form-group">
+				<button ng-click="sc.addRecord()" class="btn btn-primary">Thêm mới</button>
+			</div>
+		</form>
+	</div>
+	<div class="box-header">
+		<h3 class="box-title">Danh sách chuyên môn</h3>
+	</div>
+	<div class="box-body">
+		<table class="table table-bordered table-hover table-striped">
+			<tr class="bg-aqua-active">
+				<th>ID</th>
+				<th>Name</th>
+				<th>Mô tả</th>
+				<th>Thao tác</th>
+			</tr>
+			<tr ng-repeat="record in sc.listRecord">
+				<td>{{record.id}}</td>
+				<td>{{record.name}}</td>
+				<td>{{record.description | limitTo:50}}</td>
+				<td>
+					<button class="btn btn-primary" ng-click="sc.showEditModal(record)">
+						<i class="fa fa-edit"></i> Sửa
+					</button>
+					<button class="btn btn-default" ng-click="sc.deleteRecord(record)">
+						<i class="fa fa-trash"></i> Xóa
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="editRecordModal" class="modal fade">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Chỉnh sửa thông tin</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label>Tên</label>
+						<input type="text" ng-model="sc.editRecord.name" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label>Mô tả</label>
+						<textarea class="form-control" ng-model="sc.editRecord.description" cols="30"
+						          rows="10"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="sc.saveEditRecord()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>

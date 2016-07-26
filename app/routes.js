@@ -21,6 +21,26 @@ htAdmin.config(function ($stateProvider, $urlRouterProvider) {
 				return accountService.checkLogin();
 			}
 		}
+	}).state('dashboard.question',{
+		url: 'question',
+		templateUrl: 'components/question/questionView.html',
+		controller: 'QuestionController',
+		controllerAs: 'sc',
+		resolve: {
+			isLogin: (accountService) => {
+				return accountService.checkLogin();
+			}
+		}
+	}).state('dashboard.specialization',{
+		url: 'specialization',
+		templateUrl: 'components/specialization/specializationView.html',
+		controller: 'SpecializationController',
+		controllerAs: 'sc',
+		resolve: {
+			isLogin: (accountService) => {
+				return accountService.checkLogin();
+			}
+		}
 	}).state('login', {
 		url: '/login',
 		templateUrl: 'components/login/loginView.html',

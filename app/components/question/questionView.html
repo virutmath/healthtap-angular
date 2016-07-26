@@ -1,0 +1,98 @@
+<link rel="stylesheet" href="components/question/styles.min.css">
+<div class="box">
+	<div class="box-header with-border">
+		<h3 class="box-title">
+			Thêm mới câu hỏi
+		</h3>
+	</div>
+	<div class="box-body">
+		<div ng-repeat="errMsg in uc.errors">
+			<div class="alert alert-warning alert-dismissible fade in" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+					aria-hidden="true">×</span></button>
+				{{errMsg}}
+			</div>
+		</div>
+		<form>
+			<div class="form-group">
+				<label>Chọn chuyên môn/lĩnh vực</label>
+				<ui-select ng-model="sc.specialization">
+					<ui-select-match>
+						<span>{{sc.specialization.name}}</span>
+					</ui-select-match>
+					<ui-select-choices repeat="item in (sc.listSpec | filter: $select.search) track by item.id">
+						<span>{{item.name}}</span>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+			<div class="form-group">
+				<label>Nội dung câu hỏi</label>
+				<textarea class="form-control" ng-model="sc.newRecord.content"></textarea>
+			</div>
+			<div class="form-group">
+				<button ng-click="sc.addRecord()" class="btn btn-primary">Thêm mới</button>
+			</div>
+		</form>
+	</div>
+	<div class="box-header">
+		<h3 class="box-title">Danh sách user</h3>
+	</div>
+	<div class="box-body">
+		<table class="table table-bordered table-hover table-striped">
+			<tr class="bg-aqua-active">
+				<th>ID</th>
+				<th>Nội dung</th>
+				<th>Thời gian tạo</th>
+				<th>Thời gian cập nhật</th>
+				<th>Thao tác</th>
+			</tr>
+			<tr ng-repeat="record in sc.listRecord">
+				<td>{{record.id}}</td>
+				<td>{{record.content|limitTo:50}}</td>
+				<td>{{record.created_at}}</td>
+				<td>{{record.updated_at}}</td>
+				<td>
+					<button class="btn btn-primary" ng-click="sc.showEditModal(record)">
+						<i class="fa fa-edit"></i> Sửa
+					</button>
+					<button class="btn btn-default" ng-click="sc.deleteRecord(record)">
+						<i class="fa fa-trash"></i> Xóa
+					</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<div id="editRecordModal" class="modal fade">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Chỉnh sửa câu hỏi</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label>Chọn chuyên môn/lĩnh vực</label>
+						<ui-select ng-model="sc.specialization">
+							<ui-select-match>
+								<span>{{sc.specialization.name}}</span>
+							</ui-select-match>
+							<ui-select-choices repeat="item in (sc.listSpec | filter: $select.search) track by item.id">
+								<span>{{item.name}}</span>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+					<div class="form-group">
+						<label>Nội dung câu hỏi</label>
+						<textarea class="form-control" ng-model="sc.editRecord.content"></textarea>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" ng-click="sc.saveEditRecord()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -30,3 +30,14 @@ class TableAdmin {
 		return data;
 	}
 }
+var removeElement = (array,element)=>{
+	let index = array.indexOf(element);
+	if(index > -1) {
+		return array.splice(index,1);
+	}
+};
+var resetObject = (object)=>{
+	for(var i in object) {
+		object[i] = null;
+	}
+};

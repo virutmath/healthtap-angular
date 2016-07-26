@@ -17,6 +17,9 @@
     "angular-cookies": "^1.5.7",
     "angular-bootstrap": "^2.0.0",
     "jquery-confirm2": "craftpip/jquery-confirm#^2.5.1",
-    "async": "^2.0.1"
+    "async": "^2.0.1",
+    "angular-translate": "^2.11.1",
+    "angular-sanitize": "^1.5.8",
+    "angular-ui-select": "^0.18.1"
   }
 }
