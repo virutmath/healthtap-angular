@@ -1,7 +1,8 @@
+<link rel="stylesheet" href="components/topic/styles.min.css">
 <div class="box">
 	<div class="box-header with-border">
 		<h3 class="box-title">
-			Thêm mới chuyên môn
+			Thêm mới chủ đề
 		</h3>
 	</div>
 	<div class="box-body">
@@ -14,12 +15,12 @@
 		</div>
 		<form>
 			<div class="form-group">
-				<label>Tên chuyên môn</label>
+				<label>Tên chủ đề</label>
 				<input type="text" ng-model="sc.newRecord.name" class="form-control" required>
 			</div>
 			<div class="form-group">
 				<label>Mô tả</label>
-				<textarea class="form-control" ng-model="sc.newRecord.description"></textarea>
+				<textarea class="form-control" ng-model="sc.newRecord.description" cols="30" rows="10"></textarea>
 			</div>
 			<div class="form-group">
 				<button ng-click="sc.addRecord()" class="btn btn-primary">Thêm mới</button>
@@ -27,16 +28,9 @@
 		</form>
 	</div>
 	<div class="box-header">
-		<h3 class="box-title">Danh sách chuyên môn</h3>
+		<h3 class="box-title">Danh sách topic</h3>
 	</div>
 	<div class="box-body">
-		<form class="form-inline table-search">
-			<div class="row">
-				<div class="col-xs-3">
-					<button class="btn btn-primary" ng-click="sc.searchRecord()">Tìm kiếm</button>
-				</div>
-			</div>
-		</form>
 		<table class="table table-bordered table-hover table-striped">
 			<tr class="bg-aqua-active">
 				<th>ID</th>

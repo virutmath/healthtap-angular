@@ -15,7 +15,7 @@ htAdmin.config(function ($stateProvider, $urlRouterProvider) {
 		url :'user',
 		templateUrl: 'components/user/userListView.html',
 		controller: 'UserController',
-		controllerAs: 'uc',
+		controllerAs: 'sc',
 		resolve: {
 			isLogin: (accountService) => {
 				return accountService.checkLogin();
@@ -35,6 +35,16 @@ htAdmin.config(function ($stateProvider, $urlRouterProvider) {
 		url: 'specialization',
 		templateUrl: 'components/specialization/specializationView.html',
 		controller: 'SpecializationController',
+		controllerAs: 'sc',
+		resolve: {
+			isLogin: (accountService) => {
+				return accountService.checkLogin();
+			}
+		}
+	}).state('dashboard.topic',{
+		url: 'topic',
+		templateUrl: 'components/topic/topicView.html',
+		controller: 'TopicController',
 		controllerAs: 'sc',
 		resolve: {
 			isLogin: (accountService) => {

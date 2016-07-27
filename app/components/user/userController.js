@@ -9,6 +9,7 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	let self = this;
 	self.listUser = [];
 	self.errors = [];
+	self.search = {};
 
 
 	self.translations = {};
@@ -52,8 +53,15 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 		})
 	};
 
-	this.showCreateUserArea = () => {
 
+	this.searchRecord = () => {
+		_getListUser(self.search,function(err,response){
+			self.listUser = response.data;
+			self.listUser.map((user)=> {
+				user.avatar = profileService.getAvatarUrl(user.avatar_url);
+				return user;
+			});
+		})
 	};
 
 	this.showEditModal = (user) => {
@@ -145,7 +153,7 @@ htAdmin.controller('UserController', function ($state, $stateParams, requestServ
 	function _getListUser(filterDTO, callback) {
 		if (!callback) throw new Error("this function require callback");
 		//TODO parse filterDTO
-		requestService.apiRequest('get', API.URL.user_list(), null, callback)
+		requestService.apiRequest('get', API.URL.user_list(), filterDTO, callback)
 	}
 
 	this.init();

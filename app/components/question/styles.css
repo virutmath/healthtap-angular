@@ -1,7 +1,6 @@
-.avatar-thumb {
-	width : 50px;
-	border-radius: 50%;
+.table-search {
+	margin-bottom: 20px;
 }
-.avatar-thumb img {
+.table-search .form-control {
 	width: 100%;
 }

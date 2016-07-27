@@ -39,12 +39,15 @@ htAdmin.service('requestService', function ($http, $cookies, tokenControlService
 
 	this.apiRequest = (method = 'get', url, params, successCb, failureCb) => {
 		var self = this;
-		$http({
+		var httpConfig = {
 			method: method,
 			url: url,
-			data: params,
 			headers: {'Authorization': tokenControlService.getAuthorizationToken()}
-		}).then((response)=> {
+		};
+		if(method == 'get') httpConfig.params = params;
+		else httpConfig.data = params;
+
+		$http(httpConfig).then((response)=> {
 			// console.log(response);
 			if (successCb) successCb(null, response);
 		}, (response)=> {

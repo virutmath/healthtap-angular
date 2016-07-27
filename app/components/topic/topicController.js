@@ -1,4 +1,4 @@
-htAdmin.controller('QuestionController', function ($state, $stateParams, requestService, accountService,
+htAdmin.controller('TopicController', function ($state, $stateParams, requestService, accountService,
                                                profileService, alertService, languageService, isLogin) {
 	//check login, check permission
 	if (!isLogin) {
@@ -13,16 +13,13 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 
 	self.translations = {};
 
-	self.specialization = null;
-	self.listSpec = [];
 
-
-	//new user object
+	//new record object
 	self.newRecord = {
 
 	};
 
-	//edit user object
+	//edit record object
 	self.editRecord = {
 		id: null,
 
@@ -40,29 +37,16 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 			self.translations.not_allow_edit = result['ALERT.PERMISSION.NOT_PERMISSION_EDIT'];
 			self.translations.not_allow_add = result['ALERT.PERMISSION.NOT_PERMISSION_ADD'];
 		});
-		//get list specialization
-		requestService.apiRequest('get',API.URL.specialization(),null,(err,response)=>{
-			self.listSpec = response.data;
-		});
 		//get list record
-		_getListRecord(null, function (err, result) {
-			self.listRecord = result.data.data;
-		});
-	};
-
-	this.searchRecord = () => {
-		var filterDTO = {
-			specialization_id : self.search.specialization.id
-		};
-		_getListRecord(filterDTO,(err,result)=>{
-			console.log(result);
-			self.listRecord = result.data.data;
+		_getListRecord(null,function(err,result){
+			self.listRecord = result.data;
 		})
 	};
 
+
 	this.showEditModal = (record) => {
 		$('#editRecordModal').modal();
-		requestService.apiRequest('get', API.URL.question(record.id), null, function (err, response) {
+		requestService.apiRequest('get', API.URL.topic(record.id), null, function (err, response) {
 			self.editRecord = response.data.data;
 		})
 	};
@@ -73,10 +57,11 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 			return false;
 		}
 		let params = {
-			specialization_id: self.specialization.id,
-			content: self.editRecord.content
+			name: self.editRecord.name,
+			description: self.editRecord.description
 		};
-		requestService.formDataRequest('put',API.URL.question(self.editRecord.id), params, (err, response)=> {
+
+		requestService.formDataRequest('put',API.URL.topic(self.editRecord.id), params, (err, response)=> {
 			// console.log(response);
 			alertService.alert('Cập nhật thành công');
 			$('#editRecordModal').modal('hide');
@@ -89,10 +74,10 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 			alertService.alert(self.translations.not_allow_delete);
 			return false;
 		}
-		alertService.confirm('Bạn có muốn xóa câu hỏi này?', ()=> {
+		alertService.confirm('Bạn có muốn xóa người dùng này?',()=>{
 			//remove bản ghi khỏi listUser
-			removeElement(self.listRecord, record);
-			requestService.apiRequest('delete', API.URL.question(record.id), null, function (err, response) {
+			removeElement(self.listRecord,record);
+			requestService.apiRequest('delete',API.URL.topic(record.id),null,function(err,response){
 				alertService.alert('Thành công');
 			})
 		})
@@ -106,17 +91,15 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 		}
 		self.errors = [];
 		let params = {
-			content: self.newRecord.content,
-			specialization_id: self.specialization.id
+			name: self.newRecord.name,
+			description: self.newRecord.description
 		};
-		alertService.confirm('Bạn muốn thêm mới bản ghi?', ()=>{
-			requestService.apiRequest('post', API.URL.question(), params, function (err, response) {
-				console.log(response);
+		alertService.confirm('Bạn muốn thêm mới bản ghi',()=>{
+			requestService.apiRequest('post', API.URL.topic(), params, function (err, response) {
+				// console.log(response);
 				//thành công => update table
 				self.listRecord.push(response.data.data);
-				//clear input
 				resetObject(self.newRecord);
-				self.specialization = null;
 			}, function (err) {
 				// console.log(err);
 				for (var field in err.data.errors) {
@@ -135,7 +118,7 @@ htAdmin.controller('QuestionController', function ($state, $stateParams, request
 	function _getListRecord(filterDTO, callback) {
 		if (!callback) throw new Error("this function require callback");
 		//TODO parse filterDTO
-		requestService.apiRequest('get', API.URL.question(), filterDTO, callback)
+		requestService.apiRequest('get', API.URL.topic(), null, callback)
 	}
 
 	this.init();

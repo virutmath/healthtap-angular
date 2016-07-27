@@ -4,6 +4,7 @@ const API_USER_INFO = '/users/info';
 const API_USER = '/users';
 const API_SPECIALIZATION = '/specialization';
 const API_QUESTION = '/questions';
+const API_TOPIC = '/topics';
 
 const CLIENT_ID = 'health';
 const CLIENT_SECRET = '3erfsd5ghgfssfg';
@@ -38,6 +39,13 @@ const API = {
 			}else{
 				return BASE_API_URL + API_QUESTION;
 			}
+		},
+		topic: (id = '') => {
+			if(id) {
+				return BASE_API_URL + API_TOPIC + '/' + id;
+			}else{
+				return BASE_API_URL + API_TOPIC;
+			}
 		}
 	}
 };
@@ -57,21 +65,39 @@ const SIDEBAR_MENU = [
 		]
 	},
 	{
-		'name' : 'Quản lý chuyên môn',
+		'name': 'Quản lý nội dung',
 		'child': [
 			{
-				'name': 'Danh sách',
-				'route': 'dashboard.specialization'
+				'name':'Quản lý câu hỏi',
+				'route':'dashboard.question'
+			},
+			{
+				'name':'Quản lý chuyên khoa',
+				'route':'dashboard.specialization'
+			},
+			{
+				'name':'Quản lý chủ đề',
+				'route':'dashboard.topic'
+			},
+			{
+				'name':'Quản lý danh hiệu',
+				'route':'dashboard'
+			},
+		]
+	},
+	{
+		'name': 'Khiếu nại',
+		'child': [
+			{
+				'name': 'Danh sách khiếu nại',
+				'route':'dashboard'
 			}
 		]
 	},
 	{
-		'name' : 'Quản lý câu hỏi',
-		'child': [
-			{
-				'name': 'Danh sách',
-				'route': 'dashboard.question'
-			}
+		'name': 'Thống kê',
+		'child':[
+
 		]
 	}
 ];

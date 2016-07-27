@@ -9,6 +9,7 @@ htAdmin.controller('SpecializationController', function ($state, $stateParams, r
 	let self = this;
 	self.listRecord = [];
 	self.errors = [];
+	self.search = {};
 
 
 	self.translations = {};
@@ -43,9 +44,15 @@ htAdmin.controller('SpecializationController', function ($state, $stateParams, r
 		})
 	};
 
-	this.showCreateRecordArea = () => {
 
+	this.searchRecord = () => {
+		var filterDTO = {};
+		_getListRecord(filterDTO,(err,result)=>{
+			console.log(result);
+			self.listRecord = result.data.data;
+		})
 	};
+
 
 	this.showEditModal = (record) => {
 		$('#editRecordModal').modal();
@@ -61,7 +68,7 @@ htAdmin.controller('SpecializationController', function ($state, $stateParams, r
 		}
 		let params = {};
 
-		requestService.formDataRequest(API.URL.user_detail(self.editRecord.id), params, (err, response)=> {
+		requestService.formDataRequest('put',API.URL.user_detail(self.editRecord.id), params, (err, response)=> {
 			// console.log(response);
 			alertService.alert('Cập nhật thành công');
 			$('#editRecordModal').modal('hide');
@@ -77,7 +84,7 @@ htAdmin.controller('SpecializationController', function ($state, $stateParams, r
 		alertService.confirm('Bạn có muốn xóa người dùng này?',()=>{
 			//remove bản ghi khỏi listUser
 			removeElement(self.listRecord,record);
-			requestService.apiRequest('delete',API.URL.user_detail(user.id),null,function(err,response){
+			requestService.apiRequest('delete',API.URL.user_detail(record.id),null,function(err,response){
 				alertService.alert('Thành công');
 			})
 		})
@@ -116,7 +123,7 @@ htAdmin.controller('SpecializationController', function ($state, $stateParams, r
 	function _getListRecord(filterDTO, callback) {
 		if (!callback) throw new Error("this function require callback");
 		//TODO parse filterDTO
-		requestService.apiRequest('get', API.URL.user_list(), null, callback)
+		requestService.apiRequest('get', API.URL.user_list(), filterDTO, callback)
 	}
 
 	this.init();

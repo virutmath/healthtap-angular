@@ -17,7 +17,7 @@
 			<div class="form-group">
 				<label>Chọn chuyên môn/lĩnh vực</label>
 				<ui-select ng-model="sc.specialization">
-					<ui-select-match>
+					<ui-select-match placeholder="Chọn chuyên khoa">
 						<span>{{sc.specialization.name}}</span>
 					</ui-select-match>
 					<ui-select-choices repeat="item in (sc.listSpec | filter: $select.search) track by item.id">
@@ -35,9 +35,26 @@
 		</form>
 	</div>
 	<div class="box-header">
-		<h3 class="box-title">Danh sách user</h3>
+		<h3 class="box-title">Danh sách câu hỏi</h3>
 	</div>
 	<div class="box-body">
+		<form class="form-inline table-search">
+			<div class="row">
+				<div class="col-xs-3">
+					<ui-select ng-model="sc.search.specialization">
+						<ui-select-match placeholder="Chọn chuyên khoa">
+							<span>{{sc.search.specialization.name}}</span>
+						</ui-select-match>
+						<ui-select-choices repeat="item in (sc.listSpec | filter: $select.search) track by item.id">
+							<span>{{item.name}}</span>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+				<div class="col-xs-3">
+					<button class="btn btn-primary" ng-click="sc.searchRecord()">Tìm kiếm</button>
+				</div>
+			</div>
+		</form>
 		<table class="table table-bordered table-hover table-striped">
 			<tr class="bg-aqua-active">
 				<th>ID</th>
