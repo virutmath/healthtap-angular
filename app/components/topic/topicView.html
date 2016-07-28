@@ -19,8 +19,19 @@
 				<input type="text" ng-model="sc.newRecord.name" class="form-control" required>
 			</div>
 			<div class="form-group">
+				<label>Chuyên khoa liên quan</label>
+				<ui-select ng-model="sc.specialization">
+					<ui-select-match placeholder="Chọn chuyên khoa" required>
+						<span>{{sc.specialization.name}}</span>
+					</ui-select-match>
+					<ui-select-choices repeat="item in (sc.listSpec | filter: $select.search) track by item.id">
+						<span>{{item.name}}</span>
+					</ui-select-choices>
+				</ui-select>
+			</div>
+			<div class="form-group">
 				<label>Mô tả</label>
-				<textarea class="form-control" ng-model="sc.newRecord.description" cols="30" rows="10"></textarea>
+				<textarea class="form-control" ng-model="sc.newRecord.description"></textarea>
 			</div>
 			<div class="form-group">
 				<button ng-click="sc.addRecord()" class="btn btn-primary">Thêm mới</button>
@@ -35,12 +46,14 @@
 			<tr class="bg-aqua-active">
 				<th>ID</th>
 				<th>Name</th>
+				<th>Chuyên khoa</th>
 				<th>Mô tả</th>
 				<th>Thao tác</th>
 			</tr>
 			<tr ng-repeat="record in sc.listRecord">
 				<td>{{record.id}}</td>
 				<td>{{record.name}}</td>
+				<td>{{record.specialization.name}}</td>
 				<td>{{record.description | limitTo:50}}</td>
 				<td>
 					<button class="btn btn-primary" ng-click="sc.showEditModal(record)">

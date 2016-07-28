@@ -9,6 +9,7 @@ htAdmin.controller('TopicController', function ($state, $stateParams, requestSer
 	let self = this;
 	self.listRecord = [];
 	self.errors = [];
+	self.listSpec = [];
 
 
 	self.translations = {};
@@ -37,10 +38,16 @@ htAdmin.controller('TopicController', function ($state, $stateParams, requestSer
 			self.translations.not_allow_edit = result['ALERT.PERMISSION.NOT_PERMISSION_EDIT'];
 			self.translations.not_allow_add = result['ALERT.PERMISSION.NOT_PERMISSION_ADD'];
 		});
-		//get list record
-		_getListRecord(null,function(err,result){
-			self.listRecord = result.data;
-		})
+
+		//get list specialization
+		requestService.apiRequest('get',API.URL.specialization(),null,(err,response)=>{
+			self.listSpec = response.data;
+			//get list record
+			_getListRecord(null,function(err,result){
+				self.listRecord = result.data;
+				_parseSpec();
+			});
+		});
 	};
 
 
@@ -90,15 +97,26 @@ htAdmin.controller('TopicController', function ($state, $stateParams, requestSer
 			return false;
 		}
 		self.errors = [];
+		//validate data
+		if(!self.specialization) {
+			self.errors.push('Bạn chưa chọn chuyên khoa liên quan');
+			return false;
+		}
+		if(!self.newRecord.name) {
+			self.errors.push('Bạn chưa nhập tên chủ đề');
+			return false;
+		}
 		let params = {
 			name: self.newRecord.name,
-			description: self.newRecord.description
+			description: self.newRecord.description,
+			specialization_id  : self.specialization.id
 		};
 		alertService.confirm('Bạn muốn thêm mới bản ghi',()=>{
 			requestService.apiRequest('post', API.URL.topic(), params, function (err, response) {
 				// console.log(response);
 				//thành công => update table
 				self.listRecord.push(response.data.data);
+				_parseSpec();
 				resetObject(self.newRecord);
 			}, function (err) {
 				// console.log(err);
@@ -112,6 +130,20 @@ htAdmin.controller('TopicController', function ($state, $stateParams, requestSer
 			});
 		});
 	};
+
+	function _parseSpec() {
+		self.listRecord.map((item)=>{
+			item.specialization = null;
+			if(item.specialization_id) {
+				console.log(self.listSpec);
+				item.specialization = _.find(self.listSpec,(o)=>{
+					return o.id == item.specialization_id;
+				});
+				console.log(item.specialization)
+			}
+			return item;
+		});
+	}
 
 
 	//private method

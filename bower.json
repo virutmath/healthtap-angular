@@ -20,6 +20,7 @@
     "async": "^2.0.1",
     "angular-translate": "^2.11.1",
     "angular-sanitize": "^1.5.8",
-    "angular-ui-select": "^0.18.1"
+    "angular-ui-select": "^0.18.1",
+    "lodash": "^4.14.0"
   }
 }
